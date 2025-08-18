@@ -100,7 +100,7 @@ export const SnippetCard = forwardRef<HTMLDivElement, SnippetCardProps>(
             'not-italic font-medium',
             fontSize === 'xl' ? 'text-lg' : fontSize === 'lg' ? 'text-base' : 'text-sm',
             theme === 'code' ? 'text-code-keyword font-code' : 
-            theme === 'scripture' ? 'text-scripture-accent' :
+            theme === 'scripture' ? 'text-scripture-accent font-serif' :
             theme === 'modern' ? 'text-white/90' : 'text-muted-foreground',
             alignment === 'left' ? 'text-left' :
             alignment === 'right' ? 'text-right' : 'text-center'

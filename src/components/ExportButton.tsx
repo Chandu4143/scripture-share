@@ -22,23 +22,30 @@ export function ExportButton({ targetRef, filename = 'bible-verse', disabled }: 
     setIsExporting(true);
 
     try {
-      // Add a delay to ensure all styles are applied
-      await new Promise(resolve => setTimeout(resolve, 100));
+      // Longer delay to ensure all styles and fonts are loaded
+      await new Promise(resolve => setTimeout(resolve, 500));
 
-      const dataUrl = await toPng(targetRef.current, {
+      // Get the element's computed styles
+      const element = targetRef.current;
+      const computedStyle = window.getComputedStyle(element);
+      
+      const dataUrl = await toPng(element, {
         quality: 1.0,
-        pixelRatio: 2,
+        pixelRatio: 3, // Higher resolution
         backgroundColor: 'transparent',
-        width: targetRef.current.scrollWidth,
-        height: targetRef.current.scrollHeight,
+        width: element.offsetWidth,
+        height: element.offsetHeight,
         style: {
           transform: 'scale(1)',
           transformOrigin: 'top left',
-          width: targetRef.current.scrollWidth + 'px',
-          height: targetRef.current.scrollHeight + 'px',
+          width: element.offsetWidth + 'px',
+          height: element.offsetHeight + 'px',
+          margin: '0',
+          padding: computedStyle.padding,
         },
+        cacheBust: true,
+        skipFonts: false,
         filter: (node) => {
-          // Exclude any elements that might interfere with export
           return !node.classList?.contains('no-export');
         },
       });

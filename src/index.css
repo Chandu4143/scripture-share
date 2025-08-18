@@ -33,10 +33,10 @@ All colors MUST be HSL.
     --code-string: 158 58% 62%;
     --code-number: 35 100% 74%;
 
-    /* Scripture Theme Colors */
-    --scripture-primary: 45 93% 47%;
-    --scripture-secondary: 33 100% 50%;
-    --scripture-accent: 213 27% 84%;
+    /* Scripture Theme Colors - Soft & Holy */
+    --scripture-primary: 35 45% 85%;
+    --scripture-secondary: 30 35% 90%;
+    --scripture-accent: 35 25% 25%;
 
     /* Neutral Colors */
     --muted: 240 5% 96%;
@@ -54,7 +54,7 @@ All colors MUST be HSL.
 
     /* Gradients */
     --gradient-code: linear-gradient(135deg, hsl(var(--code-bg)), hsl(243 50% 10%));
-    --gradient-scripture: linear-gradient(135deg, hsl(var(--scripture-primary)), hsl(var(--scripture-secondary)));
+    --gradient-scripture: linear-gradient(135deg, hsl(35 40% 88%), hsl(30 30% 92%));
     --gradient-modern: linear-gradient(135deg, hsl(243 75% 59%), hsl(264 83% 70%));
     --gradient-minimal: linear-gradient(135deg, hsl(0 0% 100%), hsl(240 5% 96%));
 
@@ -140,7 +140,7 @@ All colors MUST be HSL.
   
   .snippet-scripture {
     background: var(--gradient-scripture);
-    @apply text-white font-serif;
+    @apply text-scripture-accent font-serif;
   }
   
   .snippet-modern {
