@@ -1,6 +1,7 @@
 import { forwardRef } from 'react';
 import { BibleVerse, SnippetCustomization } from '@/types/bible';
 import { cn } from '@/lib/utils';
+import { motion } from 'framer-motion';
 
 interface SnippetCardProps {
   verse: BibleVerse;
@@ -10,9 +11,20 @@ interface SnippetCardProps {
 
 export const SnippetCard = forwardRef<HTMLDivElement, SnippetCardProps>(
   ({ verse, customization, className }, ref) => {
-    const { theme, fontSize, alignment, showFilename } = customization;
+    const { 
+      theme, 
+      fontSize, 
+      alignment, 
+      showFilename, 
+      fontFamily, 
+      backgroundColor, 
+      textColor, 
+      backgroundImage, 
+      watermark 
+    } = customization;
 
     const getThemeClasses = () => {
+      if (backgroundColor || backgroundImage) return ''; // Don't apply theme classes if custom color or image is set
       switch (theme) {
         case 'code':
           return 'snippet-code border border-code-comment/20';
@@ -52,8 +64,11 @@ export const SnippetCard = forwardRef<HTMLDivElement, SnippetCardProps>(
     };
 
     return (
-      <div
+      <motion.div
         ref={ref}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
         className={cn(
           'relative p-12 rounded-xl transition-all duration-300',
           'w-full max-w-3xl mx-auto',
@@ -61,7 +76,15 @@ export const SnippetCard = forwardRef<HTMLDivElement, SnippetCardProps>(
           getThemeClasses(),
           className
         )}
-        style={{ minHeight: '400px' }}
+        style={{
+          minHeight: '400px',
+          fontFamily: fontFamily ? `'${fontFamily}', sans-serif` : 'inherit',
+          backgroundColor: backgroundColor,
+          color: textColor,
+          backgroundImage: backgroundImage ? `url(${backgroundImage})` : undefined,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
       >
         {/* File header for code theme */}
         {theme === 'code' && showFilename && (
@@ -109,6 +132,13 @@ export const SnippetCard = forwardRef<HTMLDivElement, SnippetCardProps>(
           </cite>
         </div>
 
+        {/* Watermark */}
+        {watermark && (
+          <div className="absolute bottom-4 right-4 text-xs text-white/30 font-sans">
+            {watermark}
+          </div>
+        )}
+
         {/* Decorative elements for scripture theme */}
         {theme === 'scripture' && (
           <>
@@ -122,7 +152,7 @@ export const SnippetCard = forwardRef<HTMLDivElement, SnippetCardProps>(
         {theme === 'modern' && (
           <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent rounded-xl"></div>
         )}
-      </div>
+      </motion.div>
     );
   }
 );

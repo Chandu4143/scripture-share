@@ -18,4 +18,8 @@ export interface SnippetCustomization {
   fontSize: 'sm' | 'base' | 'lg' | 'xl';
   alignment: 'left' | 'center' | 'right';
   showFilename: boolean;
+  fontFamily: string;
+  backgroundColor?: string;
+  textColor?: string;
+  backgroundImage?: string;
 }

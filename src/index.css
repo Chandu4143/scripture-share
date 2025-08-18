@@ -9,7 +9,7 @@ All colors MUST be HSL.
 @layer base {
   :root {
     /* Core Colors */
-    --background: 248 250 252;
+    --background: 210 17% 98%;
     --foreground: 225 84% 5%;
 
     --card: 0 0% 100%;
@@ -128,7 +128,6 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground font-inter;
-    background-color: hsl(var(--background));
   }
 }
 

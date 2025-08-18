@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { IconSearch, IconDice6 } from '@tabler/icons-react';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface SearchBarProps {
   onSearch: (reference: string) => void;
@@ -16,40 +17,41 @@ export function SearchBar({ onSearch, onRandom, isLoading }: SearchBarProps) {
     e.preventDefault();
     if (reference.trim()) {
       onSearch(reference.trim());
+      setReference('');
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="w-full max-w-2xl mx-auto">
-      <div className="flex gap-2">
-        <div className="relative flex-1">
-          <IconSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-          <Input
-            type="text"
-            placeholder="Enter verse reference (e.g., John 3:16, Romans 8:28)"
-            value={reference}
-            onChange={(e) => setReference(e.target.value)}
-            className="pl-10 h-12 text-base"
-            disabled={isLoading}
-          />
-        </div>
-        <Button 
-          type="submit" 
-          disabled={isLoading || !reference.trim()}
-          className="h-12 px-6"
-        >
-          <IconSearch className="w-4 h-4 mr-2" />
-          Search
-        </Button>
-        <Button 
-          type="button" 
-          variant="outline" 
-          onClick={onRandom}
+    <form onSubmit={handleSubmit} className="w-full">
+      <div className="relative">
+        <IconSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
+        <Input
+          type="text"
+          placeholder="Search (e.g., John 3:16)"
+          value={reference}
+          onChange={(e) => setReference(e.target.value)}
+          className="pl-10 h-11 bg-muted/50 focus:bg-card transition-colors w-full"
           disabled={isLoading}
-          className="h-12 px-4"
-        >
-          <IconDice6 className="w-4 h-4" />
-        </Button>
+        />
+        <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button 
+                type="button" 
+                variant="ghost" 
+                size="icon"
+                onClick={onRandom}
+                disabled={isLoading}
+                className="w-8 h-8 rounded-full"
+              >
+                <IconDice6 className="w-5 h-5 text-muted-foreground" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Get Random Verse</p>
+            </TooltipContent>
+          </Tooltip>
+        </div>
       </div>
     </form>
   );

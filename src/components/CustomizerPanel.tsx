@@ -3,6 +3,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { AnimatePresence, motion } from 'framer-motion';
 import { 
   IconCode, 
   IconScriptPlus, 
@@ -11,7 +15,13 @@ import {
   IconAlignLeft,
   IconAlignCenter,
   IconAlignRight,
-  IconTypography
+  IconTypography,
+  IconPalette,
+  IconRefresh,
+  IconPhoto,
+  IconX,
+  IconSettings,
+  IconDroplet
 } from '@tabler/icons-react';
 
 interface CustomizerPanelProps {
@@ -19,32 +29,29 @@ interface CustomizerPanelProps {
   onChange: (customization: SnippetCustomization) => void;
 }
 
+const Section = ({ title, icon, children }: { title: string, icon: React.ReactNode, children: React.ReactNode }) => (
+  <motion.div 
+    className="space-y-4 py-4 border-b border-border/50"
+    initial={{ opacity: 0, y: 10 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.3 }}
+  >
+    <Label className="text-base font-semibold flex items-center gap-2 px-4">
+      {icon}
+      {title}
+    </Label>
+    <div className="px-4">
+      {children}
+    </div>
+  </motion.div>
+);
+
 export function CustomizerPanel({ customization, onChange }: CustomizerPanelProps) {
-  const themes: { id: SnippetTheme; label: string; icon: React.ReactNode; description: string }[] = [
-    { 
-      id: 'code', 
-      label: 'Code', 
-      icon: <IconCode className="w-4 h-4" />,
-      description: 'Dark theme with syntax highlighting'
-    },
-    { 
-      id: 'scripture', 
-      label: 'Scripture', 
-      icon: <IconScriptPlus className="w-4 h-4" />,
-      description: 'Golden gradient with elegant typography'
-    },
-    { 
-      id: 'modern', 
-      label: 'Modern', 
-      icon: <IconSparkles className="w-4 h-4" />,
-      description: 'Purple gradient with clean design'
-    },
-    { 
-      id: 'minimal', 
-      label: 'Minimal', 
-      icon: <IconLayoutGrid className="w-4 h-4" />,
-      description: 'Clean white with subtle shadows'
-    },
+  const themes: { id: SnippetTheme; label: string; icon: React.ReactNode; }[] = [
+    { id: 'code', label: 'Code', icon: <IconCode className="w-5 h-5" /> },
+    { id: 'scripture', label: 'Scripture', icon: <IconScriptPlus className="w-5 h-5" /> },
+    { id: 'modern', label: 'Modern', icon: <IconSparkles className="w-5 h-5" /> },
+    { id: 'minimal', label: 'Minimal', icon: <IconLayoutGrid className="w-5 h-5" /> },
   ];
 
   const fontSizes = [
@@ -55,90 +62,199 @@ export function CustomizerPanel({ customization, onChange }: CustomizerPanelProp
   ] as const;
 
   const alignments = [
-    { id: 'left', label: 'Left', icon: <IconAlignLeft className="w-4 h-4" /> },
-    { id: 'center', label: 'Center', icon: <IconAlignCenter className="w-4 h-4" /> },
-    { id: 'right', label: 'Right', icon: <IconAlignRight className="w-4 h-4" /> },
+    { id: 'left', label: 'Left', icon: <IconAlignLeft className="w-5 h-5" /> },
+    { id: 'center', label: 'Center', icon: <IconAlignCenter className="w-5 h-5" /> },
+    { id: 'right', label: 'Right', icon: <IconAlignRight className="w-5 h-5" /> },
   ] as const;
 
+  const fontFamilies = [
+    { id: 'Inter', label: 'Inter' },
+    { id: 'Roboto', label: 'Roboto' },
+    { id: 'Lato', label: 'Lato' },
+    { id: 'Merriweather', label: 'Merriweather' },
+    { id: 'Playfair Display', label: 'Playfair Display' },
+    { id: 'JetBrains Mono', label: 'JetBrains Mono' },
+    { id: 'Source Code Pro', label: 'Source Code Pro' },
+  ] as const;
+
+  const handleColorChange = (type: 'backgroundColor' | 'textColor', value: string) => {
+    onChange({ ...customization, [type]: value });
+  };
+
+  const resetColors = () => {
+    onChange({ ...customization, backgroundColor: undefined, textColor: undefined });
+  };
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        onChange({ ...customization, backgroundImage: reader.result as string });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const clearImage = () => {
+    onChange({ ...customization, backgroundImage: undefined });
+  };
+
   return (
-    <Card className="w-full max-w-xs">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <IconTypography className="w-5 h-5" />
-          Customize
-        </CardTitle>
+    <Card className="w-full h-full border-0 bg-card/80 backdrop-blur-sm">
+      <CardHeader className="flex flex-row items-center justify-between p-4 border-b border-border">
+        <div className="flex items-center gap-3">
+          <IconSettings className="w-6 h-6 text-primary" />
+          <CardTitle className="text-lg">Customize</CardTitle>
+        </div>
       </CardHeader>
-      <CardContent className="space-y-6">
-        {/* Theme Selection */}
-        <div className="space-y-3">
-          <Label className="text-sm font-medium">Theme</Label>
-          <div className="grid grid-cols-2 gap-2">
-            {themes.map((theme) => (
-              <Button
-                key={theme.id}
-                variant={customization.theme === theme.id ? "default" : "outline"}
-                size="sm"
-                onClick={() => onChange({ ...customization, theme: theme.id })}
-                className="h-auto p-3 flex flex-col items-center gap-1"
-              >
-                {theme.icon}
-                <span className="text-xs">{theme.label}</span>
-              </Button>
-            ))}
-          </div>
-        </div>
+      <ScrollArea className="h-[calc(100vh-12rem)]">
+        <CardContent className="p-0">
+          <Section title="Theme" icon={<IconSparkles className="w-5 h-5" />}>
+            <div className="grid grid-cols-2 gap-2">
+              {themes.map((theme) => (
+                <Button
+                  key={theme.id}
+                  variant={customization.theme === theme.id ? "secondary" : "outline"}
+                  onClick={() => onChange({ ...customization, theme: theme.id })}
+                  className="h-auto p-3 flex flex-col items-center justify-center gap-2 transition-all duration-200 hover:bg-primary/10"
+                >
+                  {theme.icon}
+                  <span className="text-sm font-medium">{theme.label}</span>
+                </Button>
+              ))}
+            </div>
+          </Section>
 
-        {/* Font Size */}
-        <div className="space-y-3">
-          <Label className="text-sm font-medium">Font Size</Label>
-          <div className="grid grid-cols-2 gap-2">
-            {fontSizes.map((size) => (
-              <Button
-                key={size.id}
-                variant={customization.fontSize === size.id ? "default" : "outline"}
-                size="sm"
-                onClick={() => onChange({ ...customization, fontSize: size.id })}
+          <Section title="Typography" icon={<IconTypography className="w-5 h-5" />}>
+            <div className="space-y-4">
+              <Select
+                value={customization.fontFamily}
+                onValueChange={(value) => onChange({ ...customization, fontFamily: value })}
               >
-                {size.label}
-              </Button>
-            ))}
-          </div>
-        </div>
+                <SelectTrigger><SelectValue placeholder="Select a font" /></SelectTrigger>
+                <SelectContent>
+                  {fontFamilies.map((font) => (
+                    <SelectItem key={font.id} value={font.id} style={{ fontFamily: font.id }}>
+                      {font.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <div className="grid grid-cols-4 gap-1 bg-muted p-1 rounded-lg">
+                {fontSizes.map((size) => (
+                  <Button
+                    key={size.id}
+                    variant={customization.fontSize === size.id ? "background" : "ghost"}
+                    size="sm"
+                    onClick={() => onChange({ ...customization, fontSize: size.id })}
+                  >
+                    {size.label}
+                  </Button>
+                ))}
+              </div>
+              <div className="grid grid-cols-3 gap-1 bg-muted p-1 rounded-lg">
+                {alignments.map((align) => (
+                  <Button
+                    key={align.id}
+                    variant={customization.alignment === align.id ? "background" : "ghost"}
+                    size="icon"
+                    onClick={() => onChange({ ...customization, alignment: align.id })}
+                  >
+                    {align.icon}
+                  </Button>
+                ))}
+              </div>
+            </div>
+          </Section>
 
-        {/* Text Alignment */}
-        <div className="space-y-3">
-          <Label className="text-sm font-medium">Alignment</Label>
-          <div className="flex gap-1">
-            {alignments.map((align) => (
-              <Button
-                key={align.id}
-                variant={customization.alignment === align.id ? "default" : "outline"}
-                size="sm"
-                onClick={() => onChange({ ...customization, alignment: align.id })}
-                className="flex-1"
-              >
-                {align.icon}
+          <Section title="Colors" icon={<IconPalette className="w-5 h-5" />}>
+            <div className="flex items-center justify-between mb-2">
+              <Label className="text-sm">Custom Colors</Label>
+              <Button variant="ghost" size="sm" onClick={resetColors} className="text-xs h-auto py-1">
+                <IconRefresh className="w-3 h-3 mr-1" />
+                Reset
               </Button>
-            ))}
-          </div>
-        </div>
+            </div>
+            <div className="flex gap-2">
+              <div className="relative flex-1">
+                <Label htmlFor="bg-color" className="text-xs">BG</Label>
+                <Input
+                  id="bg-color"
+                  type="color"
+                  value={customization.backgroundColor || '#ffffff'}
+                  onChange={(e) => handleColorChange('backgroundColor', e.target.value)}
+                  className="h-9 p-1"
+                />
+              </div>
+              <div className="relative flex-1">
+                <Label htmlFor="text-color" className="text-xs">Text</Label>
+                <Input
+                  id="text-color"
+                  type="color"
+                  value={customization.textColor || '#000000'}
+                  onChange={(e) => handleColorChange('textColor', e.target.value)}
+                  className="h-9 p-1"
+                />
+              </div>
+            </div>
+          </Section>
 
-        {/* Show Filename (Code theme only) */}
-        {customization.theme === 'code' && (
-          <div className="flex items-center justify-between">
-            <Label htmlFor="filename" className="text-sm font-medium">
-              Show Filename
-            </Label>
-            <Switch
-              id="filename"
-              checked={customization.showFilename}
-              onCheckedChange={(checked) => 
-                onChange({ ...customization, showFilename: checked })
-              }
-            />
-          </div>
-        )}
-      </CardContent>
+          <Section title="Background" icon={<IconPhoto className="w-5 h-5" />}>
+            <div className="flex items-center gap-2">
+              <Input
+                type="file"
+                accept="image/*"
+                onChange={handleImageUpload}
+                className="flex-1 text-xs h-9"
+              />
+              <Button variant="ghost" size="icon" onClick={clearImage} disabled={!customization.backgroundImage}>
+                <IconX className="w-4 h-4" />
+              </Button>
+            </div>
+          </Section>
+
+          <Section title="Extras" icon={<IconSparkles className="w-5 h-5" />}>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <Label htmlFor="watermark" className="flex items-center gap-2">
+                  <IconDroplet className="w-4 h-4" />
+                  Watermark
+                </Label>
+                <Input
+                  id="watermark"
+                  type="text"
+                  placeholder="Your custom watermark"
+                  value={customization.watermark || ''}
+                  onChange={(e) => onChange({ ...customization, watermark: e.target.value })}
+                  className="h-9 max-w-[180px]"
+                />
+              </div>
+              <AnimatePresence>
+                {customization.theme === 'code' && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    className="overflow-hidden"
+                  >
+                    <div className="flex items-center justify-between pt-2">
+                      <Label htmlFor="filename">Show Filename</Label>
+                      <Switch
+                        id="filename"
+                        checked={customization.showFilename}
+                        onCheckedChange={(checked) => 
+                          onChange({ ...customization, showFilename: checked })
+                        }
+                      />
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          </Section>
+        </CardContent>
+      </ScrollArea>
     </Card>
   );
 }
