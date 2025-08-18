@@ -55,11 +55,13 @@ export const SnippetCard = forwardRef<HTMLDivElement, SnippetCardProps>(
       <div
         ref={ref}
         className={cn(
-          'relative p-8 rounded-lg overflow-hidden transition-all duration-300',
-          'min-h-[300px] max-w-2xl mx-auto',
+          'relative p-12 rounded-xl transition-all duration-300',
+          'w-full max-w-3xl mx-auto',
+          'shadow-xl',
           getThemeClasses(),
           className
         )}
+        style={{ minHeight: '400px' }}
       >
         {/* File header for code theme */}
         {theme === 'code' && showFilename && (
@@ -83,11 +85,12 @@ export const SnippetCard = forwardRef<HTMLDivElement, SnippetCardProps>(
         )}>
           {/* Verse text */}
           <blockquote className={cn(
-            'leading-relaxed mb-6',
+            'leading-relaxed mb-8',
             getFontSizeClass(),
             theme === 'code' ? 'font-code' : 
             theme === 'scripture' || theme === 'minimal' ? 'font-serif' : 'font-inter',
-            theme === 'code' ? 'text-code-string' : ''
+            theme === 'code' ? 'text-code-string' : '',
+            fontSize === 'xl' ? 'text-2xl' : fontSize === 'lg' ? 'text-xl' : fontSize === 'sm' ? 'text-base' : 'text-lg'
           )}>
             {theme === 'code' && '"'}{verse.text}{theme === 'code' && '"'}
           </blockquote>
@@ -95,10 +98,10 @@ export const SnippetCard = forwardRef<HTMLDivElement, SnippetCardProps>(
           {/* Reference */}
           <cite className={cn(
             'not-italic font-medium',
-            fontSize === 'xl' ? 'text-base' : 'text-sm',
+            fontSize === 'xl' ? 'text-lg' : fontSize === 'lg' ? 'text-base' : 'text-sm',
             theme === 'code' ? 'text-code-keyword font-code' : 
             theme === 'scripture' ? 'text-scripture-accent' :
-            theme === 'modern' ? 'text-white/80' : 'text-muted-foreground',
+            theme === 'modern' ? 'text-white/90' : 'text-muted-foreground',
             alignment === 'left' ? 'text-left' :
             alignment === 'right' ? 'text-right' : 'text-center'
           )}>
@@ -108,10 +111,16 @@ export const SnippetCard = forwardRef<HTMLDivElement, SnippetCardProps>(
 
         {/* Decorative elements for scripture theme */}
         {theme === 'scripture' && (
-          <div className="absolute top-4 left-4 w-8 h-8 border-l-2 border-t-2 border-scripture-accent/30"></div>
+          <>
+            <div className="absolute top-6 left-6 w-12 h-12 border-l-2 border-t-2 border-scripture-accent/40"></div>
+            <div className="absolute bottom-6 right-6 w-12 h-12 border-r-2 border-b-2 border-scripture-accent/40"></div>
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-2 h-2 bg-scripture-accent/20 rounded-full"></div>
+          </>
         )}
-        {theme === 'scripture' && (
-          <div className="absolute bottom-4 right-4 w-8 h-8 border-r-2 border-b-2 border-scripture-accent/30"></div>
+        
+        {/* Modern theme glow effect */}
+        {theme === 'modern' && (
+          <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent rounded-xl"></div>
         )}
       </div>
     );

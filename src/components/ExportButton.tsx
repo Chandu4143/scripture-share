@@ -27,11 +27,19 @@ export function ExportButton({ targetRef, filename = 'bible-verse', disabled }: 
 
       const dataUrl = await toPng(targetRef.current, {
         quality: 1.0,
-        pixelRatio: 2, // For high-resolution exports
+        pixelRatio: 2,
         backgroundColor: 'transparent',
+        width: targetRef.current.scrollWidth,
+        height: targetRef.current.scrollHeight,
         style: {
           transform: 'scale(1)',
           transformOrigin: 'top left',
+          width: targetRef.current.scrollWidth + 'px',
+          height: targetRef.current.scrollHeight + 'px',
+        },
+        filter: (node) => {
+          // Exclude any elements that might interfere with export
+          return !node.classList?.contains('no-export');
         },
       });
 

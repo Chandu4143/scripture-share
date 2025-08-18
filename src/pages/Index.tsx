@@ -7,7 +7,7 @@ import { CustomizerPanel } from '@/components/CustomizerPanel';
 import { ExportButton } from '@/components/ExportButton';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { IconBible, IconSparkles } from '@tabler/icons-react';
+import { IconBible, IconSparkles, IconDice6 } from '@tabler/icons-react';
 import { toast } from 'sonner';
 
 const Index = () => {
@@ -89,60 +89,78 @@ const Index = () => {
           />
         </div>
 
-        <div className="grid lg:grid-cols-4 gap-8">
+        <div className="grid lg:grid-cols-5 gap-8">
           {/* Customization Panel */}
           <div className="lg:col-span-1">
-            <CustomizerPanel 
-              customization={customization}
-              onChange={setCustomization}
-            />
+            <div className="sticky top-24">
+              <CustomizerPanel 
+                customization={customization}
+                onChange={setCustomization}
+              />
+            </div>
           </div>
 
           {/* Main Content */}
-          <div className="lg:col-span-3 space-y-6">
+          <div className="lg:col-span-4 space-y-8">
             {verse ? (
               <div className="space-y-6">
                 {/* Snippet Preview */}
-                <Card className="overflow-hidden">
-                  <CardContent className="p-8">
-                    <SnippetCard
-                      ref={snippetRef}
-                      verse={verse}
-                      customization={customization}
-                    />
-                  </CardContent>
-                </Card>
+                <div className="relative">
+                  <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-secondary/10 rounded-2xl blur-3xl transform scale-110"></div>
+                  <Card className="relative overflow-hidden border-0 bg-card/80 backdrop-blur-sm">
+                    <CardContent className="p-0">
+                      <div className="flex justify-center py-8">
+                        <SnippetCard
+                          ref={snippetRef}
+                          verse={verse}
+                          customization={customization}
+                        />
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
 
                 {/* Export Controls */}
-                <div className="flex justify-center">
+                <div className="flex justify-center gap-4">
                   <ExportButton
                     targetRef={snippetRef}
                     filename={`${verse.book}-${verse.chapter}-${verse.verse}`}
                     disabled={!verse}
                   />
+                  <Button variant="outline" onClick={handleRandom}>
+                    <IconDice6 className="w-4 h-4 mr-2" />
+                    Random Verse
+                  </Button>
                 </div>
               </div>
             ) : (
-              <Card className="p-12">
-                <div className="text-center text-muted-foreground">
-                  {isLoading ? (
-                    <div className="space-y-3">
-                      <div className="inline-flex items-center gap-2">
-                        <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
-                        Loading verse...
+              <div className="relative">
+                <div className="absolute inset-0 bg-gradient-to-r from-muted/50 to-accent/50 rounded-2xl blur-2xl"></div>
+                <Card className="relative p-16 border-dashed border-2 border-muted-foreground/20">
+                  <div className="text-center text-muted-foreground">
+                    {isLoading ? (
+                      <div className="space-y-4">
+                        <div className="inline-flex items-center gap-2">
+                          <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+                          <span className="text-lg">Loading verse...</span>
+                        </div>
                       </div>
-                    </div>
-                  ) : (
-                    <div className="space-y-3">
-                      <IconBible className="w-12 h-12 mx-auto text-muted-foreground/50" />
-                      <p>Search for a Bible verse to get started</p>
-                      <Button variant="outline" onClick={handleRandom}>
-                        Try a random verse
-                      </Button>
-                    </div>
-                  )}
-                </div>
-              </Card>
+                    ) : (
+                      <div className="space-y-6">
+                        <IconBible className="w-16 h-16 mx-auto text-muted-foreground/30" />
+                        <div>
+                          <h3 className="text-xl font-semibold mb-2">Search for a Bible verse to get started</h3>
+                          <p className="text-muted-foreground/70 mb-4">Try searching for popular verses like "John 3:16" or "Psalm 23:1"</p>
+                        </div>
+                        <Button variant="default" onClick={handleRandom} size="lg" className="gap-2">
+                          <IconDice6 className="w-5 h-5" />
+                          Try a random verse
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                </Card>
+              </div>
             )}
           </div>
         </div>
