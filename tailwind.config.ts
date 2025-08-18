@@ -52,6 +52,21 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
+				// Code theme colors
+				code: {
+					bg: 'hsl(var(--code-bg))',
+					foreground: 'hsl(var(--code-foreground))',
+					comment: 'hsl(var(--code-comment))',
+					keyword: 'hsl(var(--code-keyword))',
+					string: 'hsl(var(--code-string))',
+					number: 'hsl(var(--code-number))'
+				},
+				// Scripture theme colors
+				scripture: {
+					primary: 'hsl(var(--scripture-primary))',
+					secondary: 'hsl(var(--scripture-secondary))',
+					accent: 'hsl(var(--scripture-accent))'
+				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
 					foreground: 'hsl(var(--sidebar-foreground))',
@@ -62,6 +77,16 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				}
+			},
+			fontFamily: {
+				'code': ['JetBrains Mono', 'monospace'],
+				'serif': ['Playfair Display', 'serif'],
+				'inter': ['Inter', 'sans-serif'],
+			},
+			boxShadow: {
+				'soft': 'var(--shadow-soft)',
+				'strong': 'var(--shadow-strong)',
+				'glow': 'var(--shadow-glow)',
 			},
 			borderRadius: {
 				lg: 'var(--radius)',

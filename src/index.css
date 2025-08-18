@@ -2,41 +2,68 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+/* Bible Snippet Generator Design System
 All colors MUST be HSL.
 */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Core Colors */
+    --background: 248 250 252;
+    --foreground: 225 84% 5%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 225 84% 5%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 225 84% 5%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Brand Colors - Deep Blues & Purples */
+    --primary: 243 75% 59%;
+    --primary-foreground: 0 0% 100%;
+    
+    --secondary: 244 58% 51%;
+    --secondary-foreground: 0 0% 100%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Code Theme Colors */
+    --code-bg: 222 84% 5%;
+    --code-foreground: 213 27% 84%;
+    --code-comment: 215 14% 34%;
+    --code-keyword: 204 100% 76%;
+    --code-string: 158 58% 62%;
+    --code-number: 35 100% 74%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    /* Scripture Theme Colors */
+    --scripture-primary: 45 93% 47%;
+    --scripture-secondary: 33 100% 50%;
+    --scripture-accent: 213 27% 84%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    /* Neutral Colors */
+    --muted: 240 5% 96%;
+    --muted-foreground: 240 4% 46%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --accent: 240 5% 96%;
+    --accent-foreground: 240 6% 10%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
 
-    --radius: 0.5rem;
+    --border: 240 6% 90%;
+    --input: 240 6% 90%;
+    --ring: 243 75% 59%;
+
+    /* Gradients */
+    --gradient-code: linear-gradient(135deg, hsl(var(--code-bg)), hsl(243 50% 10%));
+    --gradient-scripture: linear-gradient(135deg, hsl(var(--scripture-primary)), hsl(var(--scripture-secondary)));
+    --gradient-modern: linear-gradient(135deg, hsl(243 75% 59%), hsl(264 83% 70%));
+    --gradient-minimal: linear-gradient(135deg, hsl(0 0% 100%), hsl(240 5% 96%));
+
+    /* Shadows */
+    --shadow-soft: 0 4px 20px -2px hsl(var(--primary) / 0.1);
+    --shadow-strong: 0 8px 30px -4px hsl(var(--primary) / 0.15);
+    --shadow-glow: 0 0 40px hsl(var(--primary) / 0.3);
+
+    --radius: 0.75rem;
 
     --sidebar-background: 0 0% 98%;
 
@@ -100,6 +127,44 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-inter;
   }
+}
+
+@layer components {
+  /* Theme-specific snippet cards */
+  .snippet-code {
+    background: var(--gradient-code);
+    @apply text-code-foreground font-mono;
+  }
+  
+  .snippet-scripture {
+    background: var(--gradient-scripture);
+    @apply text-white font-serif;
+  }
+  
+  .snippet-modern {
+    background: var(--gradient-modern);
+    @apply text-white font-sans;
+  }
+  
+  .snippet-minimal {
+    background: var(--gradient-minimal);
+    @apply text-foreground font-serif border border-border;
+  }
+
+  /* Animation utilities */
+  .animate-glow {
+    animation: glow 2s ease-in-out infinite alternate;
+  }
+  
+  @keyframes glow {
+    from { box-shadow: var(--shadow-soft); }
+    to { box-shadow: var(--shadow-glow); }
+  }
+
+  /* Typography classes */
+  .font-code { font-family: 'JetBrains Mono', monospace; }
+  .font-serif { font-family: 'Playfair Display', serif; }
+  .font-inter { font-family: 'Inter', sans-serif; }
 }
