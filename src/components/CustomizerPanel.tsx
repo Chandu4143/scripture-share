@@ -29,17 +29,18 @@ interface CustomizerPanelProps {
   onChange: (customization: SnippetCustomization) => void;
 }
 
-const Section = ({ title, icon, children }: { title: string, icon: React.ReactNode, children: React.ReactNode }) => (
+const Section = ({ title, icon, children, id }: { title: string, icon: React.ReactNode, children: React.ReactNode, id: string }) => (
   <motion.div 
     className="space-y-4 py-4 border-b border-border/50"
     initial={{ opacity: 0, y: 10 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.3 }}
+    aria-labelledby={id}
   >
-    <Label className="text-base font-semibold flex items-center gap-2 px-4">
+    <h3 id={id} className="text-base font-semibold flex items-center gap-2 px-4">
       {icon}
       {title}
-    </Label>
+    </h3>
     <div className="px-4">
       {children}
     </div>
@@ -104,13 +105,13 @@ export function CustomizerPanel({ customization, onChange }: CustomizerPanelProp
     <Card className="w-full h-full border-0 bg-card/80 backdrop-blur-sm">
       <CardHeader className="flex flex-row items-center justify-between p-4 border-b border-border">
         <div className="flex items-center gap-3">
-          <IconSettings className="w-6 h-6 text-primary" />
-          <CardTitle className="text-lg">Customize</CardTitle>
+          <IconSettings className="w-6 h-6 text-primary" aria-hidden="true" />
+          <CardTitle id="customizer-heading" className="text-lg">Customize</CardTitle>
         </div>
       </CardHeader>
       <ScrollArea className="h-[calc(100vh-12rem)]">
         <CardContent className="p-0">
-          <Section title="Theme" icon={<IconSparkles className="w-5 h-5" />}>
+          <Section id="theme-section" title="Theme" icon={<IconSparkles className="w-5 h-5" />}>
             <div className="grid grid-cols-2 gap-2">
               {themes.map((theme) => (
                 <Button
@@ -118,6 +119,8 @@ export function CustomizerPanel({ customization, onChange }: CustomizerPanelProp
                   variant={customization.theme === theme.id ? "secondary" : "outline"}
                   onClick={() => onChange({ ...customization, theme: theme.id })}
                   className="h-auto p-3 flex flex-col items-center justify-center gap-2 transition-all duration-200 hover:bg-primary/10"
+                  aria-label={`Select ${theme.label} theme`}
+                  aria-pressed={customization.theme === theme.id}
                 >
                   {theme.icon}
                   <span className="text-sm font-medium">{theme.label}</span>
@@ -126,13 +129,13 @@ export function CustomizerPanel({ customization, onChange }: CustomizerPanelProp
             </div>
           </Section>
 
-          <Section title="Typography" icon={<IconTypography className="w-5 h-5" />}>
+          <Section id="typography-section" title="Typography" icon={<IconTypography className="w-5 h-5" />}>
             <div className="space-y-4">
               <Select
                 value={customization.fontFamily}
                 onValueChange={(value) => onChange({ ...customization, fontFamily: value })}
               >
-                <SelectTrigger><SelectValue placeholder="Select a font" /></SelectTrigger>
+                <SelectTrigger aria-label="Select font family"><SelectValue placeholder="Select a font" /></SelectTrigger>
                 <SelectContent>
                   {fontFamilies.map((font) => (
                     <SelectItem key={font.id} value={font.id} style={{ fontFamily: font.id }}>
@@ -141,25 +144,31 @@ export function CustomizerPanel({ customization, onChange }: CustomizerPanelProp
                   ))}
                 </SelectContent>
               </Select>
-              <div className="grid grid-cols-4 gap-1 bg-muted p-1 rounded-lg">
+              <div role="group" aria-labelledby="font-size-label" className="grid grid-cols-4 gap-1 bg-muted p-1 rounded-lg">
+                <Label id="font-size-label" className="sr-only">Font Size</Label>
                 {fontSizes.map((size) => (
                   <Button
                     key={size.id}
                     variant={customization.fontSize === size.id ? "background" : "ghost"}
                     size="sm"
                     onClick={() => onChange({ ...customization, fontSize: size.id })}
+                    aria-pressed={customization.fontSize === size.id}
+                    aria-label={`Set font size to ${size.label}`}
                   >
                     {size.label}
                   </Button>
                 ))}
               </div>
-              <div className="grid grid-cols-3 gap-1 bg-muted p-1 rounded-lg">
+              <div role="group" aria-labelledby="text-align-label" className="grid grid-cols-3 gap-1 bg-muted p-1 rounded-lg">
+                <Label id="text-align-label" className="sr-only">Text Alignment</Label>
                 {alignments.map((align) => (
                   <Button
                     key={align.id}
                     variant={customization.alignment === align.id ? "background" : "ghost"}
                     size="icon"
                     onClick={() => onChange({ ...customization, alignment: align.id })}
+                    aria-pressed={customization.alignment === align.id}
+                    aria-label={`Align text ${align.label}`}
                   >
                     {align.icon}
                   </Button>
@@ -168,10 +177,10 @@ export function CustomizerPanel({ customization, onChange }: CustomizerPanelProp
             </div>
           </Section>
 
-          <Section title="Colors" icon={<IconPalette className="w-5 h-5" />}>
+          <Section id="colors-section" title="Colors" icon={<IconPalette className="w-5 h-5" />}>
             <div className="flex items-center justify-between mb-2">
               <Label className="text-sm">Custom Colors</Label>
-              <Button variant="ghost" size="sm" onClick={resetColors} className="text-xs h-auto py-1">
+              <Button variant="ghost" size="sm" onClick={resetColors} className="text-xs h-auto py-1" aria-label="Reset colors">
                 <IconRefresh className="w-3 h-3 mr-1" />
                 Reset
               </Button>
@@ -185,6 +194,7 @@ export function CustomizerPanel({ customization, onChange }: CustomizerPanelProp
                   value={customization.backgroundColor || '#ffffff'}
                   onChange={(e) => handleColorChange('backgroundColor', e.target.value)}
                   className="h-9 p-1"
+                  aria-label="Background color picker"
                 />
               </div>
               <div className="relative flex-1">
@@ -195,26 +205,29 @@ export function CustomizerPanel({ customization, onChange }: CustomizerPanelProp
                   value={customization.textColor || '#000000'}
                   onChange={(e) => handleColorChange('textColor', e.target.value)}
                   className="h-9 p-1"
+                  aria-label="Text color picker"
                 />
               </div>
             </div>
           </Section>
 
-          <Section title="Background" icon={<IconPhoto className="w-5 h-5" />}>
+          <Section id="background-section" title="Background" icon={<IconPhoto className="w-5 h-5" />}>
             <div className="flex items-center gap-2">
               <Input
                 type="file"
+                id="background-image-input"
                 accept="image/*"
                 onChange={handleImageUpload}
                 className="flex-1 text-xs h-9"
+                aria-label="Upload background image"
               />
-              <Button variant="ghost" size="icon" onClick={clearImage} disabled={!customization.backgroundImage}>
+              <Button variant="ghost" size="icon" onClick={clearImage} disabled={!customization.backgroundImage} aria-label="Clear background image">
                 <IconX className="w-4 h-4" />
               </Button>
             </div>
           </Section>
 
-          <Section title="Extras" icon={<IconSparkles className="w-5 h-5" />}>
+          <Section id="extras-section" title="Extras" icon={<IconSparkles className="w-5 h-5" />}>
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <Label htmlFor="watermark" className="flex items-center gap-2">
@@ -228,6 +241,7 @@ export function CustomizerPanel({ customization, onChange }: CustomizerPanelProp
                   value={customization.watermark || ''}
                   onChange={(e) => onChange({ ...customization, watermark: e.target.value })}
                   className="h-9 max-w-[180px]"
+                  aria-label="Watermark text"
                 />
               </div>
               <AnimatePresence>
@@ -246,6 +260,7 @@ export function CustomizerPanel({ customization, onChange }: CustomizerPanelProp
                         onCheckedChange={(checked) => 
                           onChange({ ...customization, showFilename: checked })
                         }
+                        aria-label="Toggle filename visibility"
                       />
                     </div>
                   </motion.div>
