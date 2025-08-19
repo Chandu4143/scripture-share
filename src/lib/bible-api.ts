@@ -3,10 +3,23 @@ import { BibleVerse, ESVResponse } from '@/types/bible';
 const ESV_API_TOKEN = '72121e94d268320c67d7303b3393e42ca7e4ae08';
 const ESV_API_BASE = 'https://api.esv.org/v3';
 
+// Normalize common user inputs like "John 3 16" -> "John 3:16"
+function normalizeReference(input: string): string {
+  const ref = input.trim().replace(/\s+/g, ' ');
+  if (ref.includes(':')) return ref;
+  const match = ref.match(/^(.+?)\s+(\d+)\s+(\d+(?:[–-]\d+)?)$/);
+  if (match) {
+    const [, book, chapter, verses] = match;
+    return `${book} ${chapter}:${verses}`;
+  }
+  return ref;
+}
+
 export async function fetchVerse(reference: string): Promise<BibleVerse | null> {
   try {
+    const normalized = normalizeReference(reference);
     const response = await fetch(
-      `${ESV_API_BASE}/passage/text/?q=${encodeURIComponent(reference)}&include-headings=false&include-footnotes=false&include-verse-numbers=false&include-short-copyright=false&include-passage-references=false`,
+      `${ESV_API_BASE}/passage/text/?q=${encodeURIComponent(normalized)}&include-headings=false&include-footnotes=false&include-verse-numbers=false&include-short-copyright=false&include-passage-references=false`,
       {
         headers: {
           'Authorization': `Token ${ESV_API_TOKEN}`,
@@ -24,13 +37,20 @@ export async function fetchVerse(reference: string): Promise<BibleVerse | null> 
       return null;
     }
 
-    // Parse the reference to extract book, chapter, verse
+    // Parse the reference to extract book, chapter, verse (fallback to chapter-only)
     const referenceMatch = data.canonical.match(/^(.+?)\s+(\d+):(\d+)/);
-    if (!referenceMatch) {
-      throw new Error('Invalid reference format');
+    let book: string, chapter: string, verse: string;
+    if (referenceMatch) {
+      [, book, chapter, verse] = referenceMatch;
+    } else {
+      const chapterOnly = data.canonical.match(/^(.+?)\s+(\d+)$/);
+      if (chapterOnly) {
+        [, book, chapter] = chapterOnly;
+        verse = '1';
+      } else {
+        throw new Error('Invalid reference format');
+      }
     }
-
-    const [, book, chapter, verse] = referenceMatch;
 
     return {
       reference: data.canonical,
