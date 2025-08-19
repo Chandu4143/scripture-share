@@ -1,73 +1,81 @@
-# Welcome to your Lovable project
+# Scripture Share Style
 
-## Project info
+A modern web application for creating beautifully styled, shareable images of scripture verses. Search for any Bible verse, customize its appearance, and export it for social media, presentations, or personal inspiration.
 
-**URL**: https://lovable.dev/projects/b883992a-16da-4f33-a665-e3f02ff0715d
+## ✨ Features
 
-## How can I edit this code?
+- **Verse Search:** Quickly find any scripture using an intuitive search interface.
+- **Style Customization:** A comprehensive set of tools to adjust fonts, colors, backgrounds, and layout.
+- **Live Preview:** See your changes in real-time as you create your perfect design.
+- **Image Export:** Download your creation as a high-quality image, ready to be shared.
+- **History:** Keep track of your previously designed verses for easy access.
 
-There are several ways of editing your application.
+## 🛠️ Tech Stack
 
-**Use Lovable**
+This project is built with a modern, robust technology stack:
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/b883992a-16da-4f33-a665-e3f02ff0715d) and start prompting.
+- **Framework:** [React](https://react.dev/) with [Vite](https://vitejs.dev/) for a fast development experience.
+- **Language:** [TypeScript](https://www.typescriptlang.org/) for type safety and improved code quality.
+- **UI Components:** [Shadcn/UI](https://ui.shadcn.com/) for a set of beautifully designed, accessible components.
+- **Styling:** [Tailwind CSS](https://tailwindcss.com/) for a utility-first CSS framework.
+- **Routing:** [React Router](https://reactrouter.com/) for client-side navigation.
+- **State Management:** [TanStack Query](https://tanstack.com/query/latest) for managing server state and caching.
+- **Form Handling:** [React Hook Form](https://react-hook-form.com/) for efficient and flexible form validation.
 
-Changes made via Lovable will be committed automatically to this repo.
+## 🚀 Getting Started
 
-**Use your preferred IDE**
+To get a local copy up and running, follow these simple steps.
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### Prerequisites
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+Make sure you have [Node.js](https://nodejs.org/) (version 18 or higher) and [npm](https://www.npmjs.com/) installed on your machine.
 
-Follow these steps:
+### Installation
+
+1.  **Clone the repository:**
+    ```sh
+    git clone https://github.com/Chandu4143/scripture-share-style.git
+    ```
+2.  **Navigate to the project directory:**
+    ```sh
+    cd scripture-share-style
+    ```
+3.  **Install NPM packages:**
+    ```sh
+    npm install
+    ```
+
+### Running the Application
+
+Start the development server to view the application in your browser:
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+The application will be available at `http://127.0.0.1:5173` (or the next available port).
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## 📦 Available Scripts
 
-**Use GitHub Codespaces**
+In the project directory, you can run:
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+- `npm run dev`: Runs the app in development mode.
+- `npm run build`: Builds the app for production to the `dist` folder.
+- `npm run lint`: Lints the project files using ESLint.
+- `npm run preview`: Serves the production build locally for preview.
 
-## What technologies are used for this project?
+## 🤝 Contributing
 
-This project is built with:
+Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
 
-## How can I deploy this project?
+1.  Fork the Project
+2.  Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3.  Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4.  Push to the Branch (`git push origin feature/AmazingFeature`)
+5.  Open a Pull Request
 
-Simply open [Lovable](https://lovable.dev/projects/b883992a-16da-4f33-a665-e3f02ff0715d) and click on Share -> Publish.
+## 📄 License
 
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+Distributed under the MIT License. See `LICENSE` for more information.
