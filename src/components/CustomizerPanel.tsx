@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { AnimatePresence, motion } from 'framer-motion';
-import { cn } from '@/lib/utils';
+
 import { 
   IconCode, 
   IconScriptPlus, 
@@ -123,19 +123,17 @@ export function CustomizerPanel({ customization, onChange }: CustomizerPanelProp
                   key={theme.id}
                   variant={customization.theme === theme.id ? "secondary" : "outline"}
                   onClick={() => onChange({ ...customization, theme: theme.id })}
-                  className={cn(
-                    "h-auto p-4 flex flex-col items-center justify-center gap-3 transition-all duration-300 hover:scale-105",
+                  className={`h-auto p-4 flex flex-col items-center justify-center gap-3 transition-all duration-300 hover:scale-105 ${
                     customization.theme === theme.id 
                       ? "ring-2 ring-primary/20 bg-primary/5 border-primary/20" 
                       : "hover:bg-accent/50 hover:border-accent"
-                  )}
+                  }`}
                   aria-label={`Select ${theme.label} theme`}
                   aria-pressed={customization.theme === theme.id}
                 >
-                  <div className={cn(
-                    "transition-colors duration-200",
+                  <div className={`transition-colors duration-200 ${
                     customization.theme === theme.id ? "text-primary" : "text-muted-foreground"
-                  )}>
+                  }`}>
                     {theme.icon}
                   </div>
                   <span className="text-sm font-medium">{theme.label}</span>
@@ -169,12 +167,11 @@ export function CustomizerPanel({ customization, onChange }: CustomizerPanelProp
                     onClick={() => onChange({ ...customization, fontSize: size.id })}
                     aria-pressed={customization.fontSize === size.id}
                     aria-label={`Set font size to ${size.label}`}
-                    className={cn(
-                      "rounded-lg transition-all duration-200",
+                    className={`rounded-lg transition-all duration-200 ${
                       customization.fontSize === size.id 
                         ? "bg-background shadow-sm border-border" 
                         : "hover:bg-background/50"
-                    )}
+                    }`}
                   >
                     {size.label}
                   </Button>
@@ -190,12 +187,11 @@ export function CustomizerPanel({ customization, onChange }: CustomizerPanelProp
                     onClick={() => onChange({ ...customization, alignment: align.id })}
                     aria-pressed={customization.alignment === align.id}
                     aria-label={`Align text ${align.label}`}
-                    className={cn(
-                      "rounded-lg transition-all duration-200",
+                    className={`rounded-lg transition-all duration-200 ${
                       customization.alignment === align.id 
                         ? "bg-background shadow-sm border-border" 
                         : "hover:bg-background/50"
-                    )}
+                    }`}
                   >
                     {align.icon}
                   </Button>
