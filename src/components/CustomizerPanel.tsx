@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { AnimatePresence, motion } from 'framer-motion';
+import { cn } from '@/lib/utils';
 import { 
   IconCode, 
   IconScriptPlus, 
@@ -31,17 +32,19 @@ interface CustomizerPanelProps {
 
 const Section = ({ title, icon, children, id }: { title: string, icon: React.ReactNode, children: React.ReactNode, id: string }) => (
   <motion.div 
-    className="space-y-4 py-4 border-b border-border/50"
+    className="space-y-6 py-6 border-b border-border/30 last:border-b-0"
     initial={{ opacity: 0, y: 10 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.3 }}
     aria-labelledby={id}
   >
-    <h3 id={id} className="text-base font-semibold flex items-center gap-2 px-4">
-      {icon}
+    <h3 id={id} className="text-sm font-semibold flex items-center gap-3 px-6 text-muted-foreground">
+      <div className="w-5 h-5 flex items-center justify-center">
+        {icon}
+      </div>
       {title}
     </h3>
-    <div className="px-4">
+    <div className="px-6">
       {children}
     </div>
   </motion.div>
@@ -102,11 +105,13 @@ export function CustomizerPanel({ customization, onChange }: CustomizerPanelProp
   };
 
   return (
-    <Card className="w-full h-full border-0 bg-card/80 backdrop-blur-sm">
-      <CardHeader className="flex flex-row items-center justify-between p-4 border-b border-border">
+    <Card className="w-full h-full border-0 bg-card/95 backdrop-blur-md shadow-lg">
+      <CardHeader className="flex flex-row items-center justify-between p-6 border-b border-border/50">
         <div className="flex items-center gap-3">
-          <IconSettings className="w-6 h-6 text-primary" aria-hidden="true" />
-          <CardTitle id="customizer-heading" className="text-lg">Customize</CardTitle>
+          <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
+            <IconSettings className="w-5 h-5 text-primary" aria-hidden="true" />
+          </div>
+          <CardTitle id="customizer-heading" className="text-xl font-semibold">Customize</CardTitle>
         </div>
       </CardHeader>
       <ScrollArea className="h-[calc(100vh-12rem)]">
@@ -118,11 +123,21 @@ export function CustomizerPanel({ customization, onChange }: CustomizerPanelProp
                   key={theme.id}
                   variant={customization.theme === theme.id ? "secondary" : "outline"}
                   onClick={() => onChange({ ...customization, theme: theme.id })}
-                  className="h-auto p-3 flex flex-col items-center justify-center gap-2 transition-all duration-200 hover:bg-primary/10"
+                  className={cn(
+                    "h-auto p-4 flex flex-col items-center justify-center gap-3 transition-all duration-300 hover:scale-105",
+                    customization.theme === theme.id 
+                      ? "ring-2 ring-primary/20 bg-primary/5 border-primary/20" 
+                      : "hover:bg-accent/50 hover:border-accent"
+                  )}
                   aria-label={`Select ${theme.label} theme`}
                   aria-pressed={customization.theme === theme.id}
                 >
-                  {theme.icon}
+                  <div className={cn(
+                    "transition-colors duration-200",
+                    customization.theme === theme.id ? "text-primary" : "text-muted-foreground"
+                  )}>
+                    {theme.icon}
+                  </div>
                   <span className="text-sm font-medium">{theme.label}</span>
                 </Button>
               ))}
@@ -144,31 +159,43 @@ export function CustomizerPanel({ customization, onChange }: CustomizerPanelProp
                   ))}
                 </SelectContent>
               </Select>
-              <div role="group" aria-labelledby="font-size-label" className="grid grid-cols-4 gap-1 bg-muted p-1 rounded-lg">
+              <div role="group" aria-labelledby="font-size-label" className="grid grid-cols-4 gap-1 bg-muted/50 p-1.5 rounded-xl">
                 <Label id="font-size-label" className="sr-only">Font Size</Label>
                 {fontSizes.map((size) => (
                   <Button
                     key={size.id}
-                    variant={customization.fontSize === size.id ? "background" : "ghost"}
+                    variant={customization.fontSize === size.id ? "secondary" : "ghost"}
                     size="sm"
                     onClick={() => onChange({ ...customization, fontSize: size.id })}
                     aria-pressed={customization.fontSize === size.id}
                     aria-label={`Set font size to ${size.label}`}
+                    className={cn(
+                      "rounded-lg transition-all duration-200",
+                      customization.fontSize === size.id 
+                        ? "bg-background shadow-sm border-border" 
+                        : "hover:bg-background/50"
+                    )}
                   >
                     {size.label}
                   </Button>
                 ))}
               </div>
-              <div role="group" aria-labelledby="text-align-label" className="grid grid-cols-3 gap-1 bg-muted p-1 rounded-lg">
+              <div role="group" aria-labelledby="text-align-label" className="grid grid-cols-3 gap-1 bg-muted/50 p-1.5 rounded-xl">
                 <Label id="text-align-label" className="sr-only">Text Alignment</Label>
                 {alignments.map((align) => (
                   <Button
                     key={align.id}
-                    variant={customization.alignment === align.id ? "background" : "ghost"}
+                    variant={customization.alignment === align.id ? "secondary" : "ghost"}
                     size="icon"
                     onClick={() => onChange({ ...customization, alignment: align.id })}
                     aria-pressed={customization.alignment === align.id}
                     aria-label={`Align text ${align.label}`}
+                    className={cn(
+                      "rounded-lg transition-all duration-200",
+                      customization.alignment === align.id 
+                        ? "bg-background shadow-sm border-border" 
+                        : "hover:bg-background/50"
+                    )}
                   >
                     {align.icon}
                   </Button>
@@ -178,69 +205,87 @@ export function CustomizerPanel({ customization, onChange }: CustomizerPanelProp
           </Section>
 
           <Section id="colors-section" title="Colors" icon={<IconPalette className="w-5 h-5" />}>
-            <div className="flex items-center justify-between mb-2">
-              <Label className="text-sm">Custom Colors</Label>
-              <Button variant="ghost" size="sm" onClick={resetColors} className="text-xs h-auto py-1" aria-label="Reset colors">
+            <div className="flex items-center justify-between mb-4">
+              <Label className="text-sm font-medium">Custom Colors</Label>
+              <Button variant="ghost" size="sm" onClick={resetColors} className="text-xs h-8 px-3 hover:bg-destructive/10 hover:text-destructive" aria-label="Reset colors">
                 <IconRefresh className="w-3 h-3 mr-1" />
                 Reset
               </Button>
             </div>
-            <div className="flex gap-2">
-              <div className="relative flex-1">
-                <Label htmlFor="bg-color" className="text-xs">BG</Label>
-                <Input
-                  id="bg-color"
-                  type="color"
-                  value={customization.backgroundColor || '#ffffff'}
-                  onChange={(e) => handleColorChange('backgroundColor', e.target.value)}
-                  className="h-9 p-1"
-                  aria-label="Background color picker"
-                />
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="bg-color" className="text-xs font-medium text-muted-foreground">Background</Label>
+                <div className="relative">
+                  <Input
+                    id="bg-color"
+                    type="color"
+                    value={customization.backgroundColor || '#ffffff'}
+                    onChange={(e) => handleColorChange('backgroundColor', e.target.value)}
+                    className="h-12 p-1 border-2 border-border/50 rounded-lg cursor-pointer hover:border-border transition-colors"
+                    aria-label="Background color picker"
+                  />
+                </div>
               </div>
-              <div className="relative flex-1">
-                <Label htmlFor="text-color" className="text-xs">Text</Label>
-                <Input
-                  id="text-color"
-                  type="color"
-                  value={customization.textColor || '#000000'}
-                  onChange={(e) => handleColorChange('textColor', e.target.value)}
-                  className="h-9 p-1"
-                  aria-label="Text color picker"
-                />
+              <div className="space-y-2">
+                <Label htmlFor="text-color" className="text-xs font-medium text-muted-foreground">Text</Label>
+                <div className="relative">
+                  <Input
+                    id="text-color"
+                    type="color"
+                    value={customization.textColor || '#000000'}
+                    onChange={(e) => handleColorChange('textColor', e.target.value)}
+                    className="h-12 p-1 border-2 border-border/50 rounded-lg cursor-pointer hover:border-border transition-colors"
+                    aria-label="Text color picker"
+                  />
+                </div>
               </div>
             </div>
           </Section>
 
           <Section id="background-section" title="Background" icon={<IconPhoto className="w-5 h-5" />}>
-            <div className="flex items-center gap-2">
-              <Input
-                type="file"
-                id="background-image-input"
-                accept="image/*"
-                onChange={handleImageUpload}
-                className="flex-1 text-xs h-9"
-                aria-label="Upload background image"
-              />
-              <Button variant="ghost" size="icon" onClick={clearImage} disabled={!customization.backgroundImage} aria-label="Clear background image">
-                <IconX className="w-4 h-4" />
-              </Button>
+            <div className="space-y-3">
+              <div className="flex items-center gap-3">
+                <Input
+                  type="file"
+                  id="background-image-input"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  className="flex-1 text-sm h-10 border-2 border-dashed border-border/50 hover:border-border transition-colors cursor-pointer"
+                  aria-label="Upload background image"
+                />
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  onClick={clearImage} 
+                  disabled={!customization.backgroundImage} 
+                  aria-label="Clear background image"
+                  className="h-10 w-10 hover:bg-destructive/10 hover:text-destructive disabled:opacity-50"
+                >
+                  <IconX className="w-4 h-4" />
+                </Button>
+              </div>
+              {customization.backgroundImage && (
+                <div className="text-xs text-muted-foreground bg-muted/50 p-2 rounded-lg">
+                  ✓ Background image uploaded
+                </div>
+              )}
             </div>
           </Section>
 
           <Section id="extras-section" title="Extras" icon={<IconSparkles className="w-5 h-5" />}>
             <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <Label htmlFor="watermark" className="flex items-center gap-2">
-                  <IconDroplet className="w-4 h-4" />
+              <div className="space-y-3">
+                <Label htmlFor="watermark" className="flex items-center gap-2 text-sm font-medium">
+                  <IconDroplet className="w-4 h-4 text-primary" />
                   Watermark
                 </Label>
                 <Input
                   id="watermark"
                   type="text"
-                  placeholder="Your custom watermark"
+                  placeholder="Add your watermark..."
                   value={customization.watermark || ''}
                   onChange={(e) => onChange({ ...customization, watermark: e.target.value })}
-                  className="h-9 max-w-[180px]"
+                  className="h-10 border-2 border-border/50 focus:border-primary transition-colors"
                   aria-label="Watermark text"
                 />
               </div>

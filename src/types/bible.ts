@@ -22,4 +22,5 @@ export interface SnippetCustomization {
   backgroundColor?: string;
   textColor?: string;
   backgroundImage?: string;
+  watermark?: string;
 }
