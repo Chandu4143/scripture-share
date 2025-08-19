@@ -22,11 +22,14 @@ export function ExportButton({ targetRef, filename = 'bible-verse', disabled }: 
     // Get the element's computed styles
     const element = targetRef.current;
     const computedStyle = window.getComputedStyle(element);
+    
+    // Wait for any animations/transitions to complete
+    await new Promise(resolve => setTimeout(resolve, 500));
 
     return await toPng(element, {
       quality: 1.0,
       pixelRatio: 3, // Higher resolution
-      backgroundColor: 'transparent',
+      backgroundColor: computedStyle.backgroundColor || '#ffffff',
       width: element.offsetWidth,
       height: element.offsetHeight,
       style: {
@@ -36,6 +39,11 @@ export function ExportButton({ targetRef, filename = 'bible-verse', disabled }: 
         height: `${element.offsetHeight}px`,
         margin: '0',
         padding: computedStyle.padding,
+        backgroundColor: computedStyle.backgroundColor,
+        backgroundImage: computedStyle.backgroundImage,
+        backgroundSize: computedStyle.backgroundSize,
+        backgroundPosition: computedStyle.backgroundPosition,
+        backgroundRepeat: computedStyle.backgroundRepeat,
       },
       cacheBust: true,
       skipFonts: false,
