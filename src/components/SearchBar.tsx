@@ -52,7 +52,24 @@ export function SearchBar({ onSearch, onRandom, isLoading }: SearchBarProps) {
             className="pl-10 h-11 bg-muted/50 focus:bg-card transition-colors w-full"
             disabled={isLoading}
           />
-          <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center">
+          <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center gap-1">
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button 
+                  type="submit"
+                  variant="secondary"
+                  size="sm"
+                  disabled={isLoading || reference.trim().length === 0}
+                  className="h-8 px-3 rounded-full"
+                  aria-label="Search verse"
+                >
+                  Search
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Search verse</p>
+              </TooltipContent>
+            </Tooltip>
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button 
@@ -62,6 +79,7 @@ export function SearchBar({ onSearch, onRandom, isLoading }: SearchBarProps) {
                   onClick={onRandom}
                   disabled={isLoading}
                   className="w-8 h-8 rounded-full"
+                  aria-label="Random verse"
                 >
                   <IconDice6 className="w-5 h-5 text-muted-foreground" />
                 </Button>
